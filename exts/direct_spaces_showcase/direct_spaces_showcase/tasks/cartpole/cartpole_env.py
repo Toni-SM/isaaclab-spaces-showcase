@@ -5,64 +5,27 @@
 
 from __future__ import annotations
 
+import gymnasium as gym
 import math
 import torch
 from collections.abc import Sequence
 
-from omni.isaac.lab_assets.cartpole import CARTPOLE_CFG
-
 import omni.isaac.lab.sim as sim_utils
-from omni.isaac.lab.assets import Articulation, ArticulationCfg
-from omni.isaac.lab.envs import DirectRLEnv, DirectRLEnvCfg
-from omni.isaac.lab.scene import InteractiveSceneCfg
-from omni.isaac.lab.sim import SimulationCfg
+from omni.isaac.lab.assets import Articulation
+from omni.isaac.lab.envs import DirectRLEnv
 from omni.isaac.lab.sim.spawners.from_files import GroundPlaneCfg, spawn_ground_plane
-from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.utils.math import sample_uniform
 
-
-@configclass
-class CartpoleEnvCfg(DirectRLEnvCfg):
-    # env
-    decimation = 2
-    episode_length_s = 5.0
-    action_scale = 100.0  # [N]
-    action_space = 1
-    observation_space = 4
-    state_space = 0
-
-    # simulation
-    sim: SimulationCfg = SimulationCfg(dt=1 / 120, render_interval=decimation)
-
-    # robot
-    robot_cfg: ArticulationCfg = CARTPOLE_CFG.replace(prim_path="/World/envs/env_.*/Robot")
-    cart_dof_name = "slider_to_cart"
-    pole_dof_name = "cart_to_pole"
-
-    # scene
-    scene: InteractiveSceneCfg = InteractiveSceneCfg(num_envs=4096, env_spacing=4.0, replicate_physics=True)
-
-    # reset
-    max_cart_pos = 3.0  # the cart is reset if it exceeds that position [m]
-    initial_pole_angle_range = [-0.25, 0.25]  # the range in which the pole angle is sampled from on reset [rad]
-
-    # reward scales
-    rew_scale_alive = 1.0
-    rew_scale_terminated = -2.0
-    rew_scale_pole_pos = -1.0
-    rew_scale_cart_vel = -0.01
-    rew_scale_pole_vel = -0.005
-
+from .cartpole_env_cfg import CartpoleBaseEnvCfg
 
 class CartpoleEnv(DirectRLEnv):
-    cfg: CartpoleEnvCfg
+    cfg: CartpoleBaseEnvCfg
 
-    def __init__(self, cfg: CartpoleEnvCfg, render_mode: str | None = None, **kwargs):
+    def __init__(self, cfg: CartpoleBaseEnvCfg, render_mode: str | None = None, **kwargs):
         super().__init__(cfg, render_mode, **kwargs)
 
         self._cart_dof_idx, _ = self.cartpole.find_joints(self.cfg.cart_dof_name)
         self._pole_dof_idx, _ = self.cartpole.find_joints(self.cfg.pole_dof_name)
-        self.action_scale = self.cfg.action_scale
 
         self.joint_pos = self.cartpole.data.joint_pos
         self.joint_vel = self.cartpole.data.joint_vel
@@ -81,10 +44,21 @@ class CartpoleEnv(DirectRLEnv):
         light_cfg.func("/World/Light", light_cfg)
 
     def _pre_physics_step(self, actions: torch.Tensor) -> None:
-        self.actions = self.action_scale * actions.clone()
+        self.actions = actions
 
     def _apply_action(self) -> None:
-        self.cartpole.set_joint_effort_target(self.actions, joint_ids=self._cart_dof_idx)
+        # fundamental spaces
+        # - Box
+        if isinstance(self.single_action_space, gym.spaces.Box):
+            target = self.cfg.max_effort * self.actions
+        # - Discrete
+        if isinstance(self.single_action_space, gym.spaces.Discrete):
+            target = torch.zeros_like(self.actions, dtype=torch.float32)  # case: n = 1
+            target = torch.where(self.actions == 0, -self.cfg.max_effort, target)
+            target = torch.where(self.actions == 2, self.cfg.max_effort, target)
+
+        # set target
+        self.cartpole.set_joint_effort_target(target, joint_ids=self._cart_dof_idx)
 
     def _get_observations(self) -> dict:
         obs = torch.cat(

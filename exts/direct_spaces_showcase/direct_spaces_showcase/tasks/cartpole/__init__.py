@@ -16,31 +16,21 @@ from . import agents
 ##
 
 gym.register(
-    id="Template-Cartpole-Direct-v0",
+    id="Spaces-Box-Box-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,
     kwargs={
-        "env_cfg_entry_point": f"{__name__}.cartpole_env:CartpoleEnvCfg",
-        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_ppo_cfg.yaml",
+        "env_cfg_entry_point": f"{__name__}.cartpole_env_cfg:BoxBoxEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_box_box_ppo_cfg.yaml",
     },
 )
 
 gym.register(
-    id="Template-Cartpole-RGB-Camera-Direct-v0",
-    entry_point=f"{__name__}.cartpole_camera_env:CartpoleCameraEnv",
+    id="Spaces-Box-Discrete-Cartpole-Direct-v0",
+    entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,
     kwargs={
-        "env_cfg_entry_point": f"{__name__}.cartpole_camera_env:CartpoleRGBCameraEnvCfg",
-        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_camera_ppo_cfg.yaml",
-    },
-)
-
-gym.register(
-    id="Template-Cartpole-Depth-Camera-Direct-v0",
-    entry_point=f"{__name__}.cartpole_camera_env:CartpoleCameraEnv",
-    disable_env_checker=True,
-    kwargs={
-        "env_cfg_entry_point": f"{__name__}.cartpole_camera_env:CartpoleDepthCameraEnvCfg",
-        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_camera_ppo_cfg.yaml",
+        "env_cfg_entry_point": f"{__name__}.cartpole_env_cfg:BoxDiscreteEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_box_discrete_ppo_cfg.yaml",
     },
 )
