@@ -61,15 +61,41 @@ class CartpoleEnv(DirectRLEnv):
         self.cartpole.set_joint_effort_target(target, joint_ids=self._cart_dof_idx)
 
     def _get_observations(self) -> dict:
-        obs = torch.cat(
-            (
-                self.joint_pos[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
-                self.joint_vel[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
-                self.joint_pos[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
-                self.joint_vel[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
-            ),
-            dim=-1,
-        )
+        # fundamental spaces
+        # - Box
+        if isinstance(self.single_observation_space["policy"], gym.spaces.Box):
+            obs = torch.cat(
+                (
+                    self.joint_pos[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
+                    self.joint_vel[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
+                    self.joint_pos[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
+                    self.joint_vel[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
+                ),
+                dim=-1,
+            )
+        # composite spaces
+        # - Tuple
+        elif isinstance(self.single_observation_space["policy"], gym.spaces.Tuple):
+            obs = (
+                torch.cat(
+                    (
+                        self.joint_pos[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
+                        self.joint_vel[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
+                    ),
+                    dim=-1,
+                ),
+                torch.cat(
+                    (
+                        self.joint_pos[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
+                        self.joint_vel[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
+                    ),
+                    dim=-1,
+                ),
+            )
+        # - Dict
+        elif isinstance(self.single_observation_space["policy"], gym.spaces.Dict):
+            obs = {"joint-positions": self.joint_pos, "joint-velocities": self.joint_vel}
+
         observations = {"policy": obs}
         return observations
 

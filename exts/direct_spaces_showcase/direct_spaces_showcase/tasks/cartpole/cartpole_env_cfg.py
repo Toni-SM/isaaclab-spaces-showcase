@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+import gymnasium as gym
+
 from omni.isaac.lab_assets.cartpole import CARTPOLE_CFG
 
 from omni.isaac.lab.assets import ArticulationCfg
@@ -99,3 +101,30 @@ class BoxDiscreteEnvCfg(CartpoleBaseEnvCfg):
     # spaces
     observation_space = 4  # also: [4] or gym.spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))
     action_space = {3}  # also: gym.spaces.Discrete(3)
+
+@configclass
+class DictBoxEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
+
+        ================  ====
+        Key               Observation
+        ================  ====
+        joint-positions   DOF positions
+        joint-velocities  DOF velocities
+        ================  ===
+
+    * Action space (``~gymnasium.spaces.Box`` with shape (1,))
+
+        ===  ===
+        Idx  Action
+        ===  ===
+        0    Cart DOF effort scale: [-1, 1]
+        ===  ===
+    """
+    observation_space = gym.spaces.Dict({
+        "joint-positions": gym.spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        "joint-velocities": gym.spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    })  # also: {"joint-positions": 2, "joint-velocities": 2}
+
+    action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(1,))  # also: 1 or [1]
