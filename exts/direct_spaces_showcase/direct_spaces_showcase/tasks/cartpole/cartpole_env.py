@@ -76,22 +76,7 @@ class CartpoleEnv(DirectRLEnv):
         # composite spaces
         # - Tuple
         elif isinstance(self.single_observation_space["policy"], gym.spaces.Tuple):
-            obs = (
-                torch.cat(
-                    (
-                        self.joint_pos[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
-                        self.joint_vel[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
-                    ),
-                    dim=-1,
-                ),
-                torch.cat(
-                    (
-                        self.joint_pos[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
-                        self.joint_vel[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
-                    ),
-                    dim=-1,
-                ),
-            )
+            obs = (self.joint_pos, self.joint_vel)
         # - Dict
         elif isinstance(self.single_observation_space["policy"], gym.spaces.Dict):
             obs = {"joint-positions": self.joint_pos, "joint-velocities": self.joint_vel}

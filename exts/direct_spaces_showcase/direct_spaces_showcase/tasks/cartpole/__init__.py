@@ -36,6 +36,16 @@ gym.register(
 )
 
 gym.register(
+    id="Spaces-Tuple-Box-Cartpole-Direct-v0",
+    entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.cartpole_env_cfg:TupleBoxEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_tuple_box_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
     id="Spaces-Dict-Box-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,

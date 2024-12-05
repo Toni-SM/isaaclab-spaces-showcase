@@ -5,7 +5,7 @@
 
 from __future__ import annotations
 
-import gymnasium as gym
+from gymnasium import spaces
 
 from omni.isaac.lab_assets.cartpole import CARTPOLE_CFG
 
@@ -70,9 +70,8 @@ class BoxBoxEnvCfg(CartpoleBaseEnvCfg):
         0    Cart DOF effort scale: [-1, 1]
         ===  ===
     """
-    # spaces
-    observation_space = 4  # also: [4] or gym.spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))
-    action_space = 1  # also: [1] or gym.spaces.Box(low=-1.0, high=1.0, shape=(1,))
+    observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
+    action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
 
 @configclass
 class BoxDiscreteEnvCfg(CartpoleBaseEnvCfg):
@@ -98,9 +97,34 @@ class BoxDiscreteEnvCfg(CartpoleBaseEnvCfg):
         2    Positive maximum cart DOF effort
         ===  ===
     """
-    # spaces
-    observation_space = 4  # also: [4] or gym.spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))
-    action_space = {3}  # also: gym.spaces.Discrete(3)
+    observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
+    action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
+@configclass
+class TupleBoxEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Tuple`` with 2 constituent spaces)
+
+        ===  ====
+        Idx  Observation
+        ===  ====
+        0    DOF positions
+        1    DOF velocities
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Box`` with shape (1,))
+
+        ===  ===
+        Idx  Action
+        ===  ===
+        0    Cart DOF effort scale: [-1, 1]
+        ===  ===
+    """
+    observation_space = spaces.Tuple((
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    ))  # or for simplicity: (2, 2)
+    action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
 
 @configclass
 class DictBoxEnvCfg(CartpoleBaseEnvCfg):
@@ -122,9 +146,8 @@ class DictBoxEnvCfg(CartpoleBaseEnvCfg):
         0    Cart DOF effort scale: [-1, 1]
         ===  ===
     """
-    observation_space = gym.spaces.Dict({
-        "joint-positions": gym.spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        "joint-velocities": gym.spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-    })  # also: {"joint-positions": 2, "joint-velocities": 2}
-
-    action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(1,))  # also: 1 or [1]
+    observation_space = spaces.Dict({
+        "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    })  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
+    action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
