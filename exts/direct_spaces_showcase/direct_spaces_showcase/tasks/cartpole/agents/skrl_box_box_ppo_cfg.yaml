@@ -3,6 +3,26 @@ seed: 42
 
 # Models are instantiated using skrl's model instantiator utility
 # https://skrl.readthedocs.io/en/latest/api/utils/model_instantiators.html
+#
+#                      obs
+#                       │
+#                ┏━━━━━━▼━━━━━┓
+#                ┃     net    ┃
+#                ┡━━━━━━━━━━━━┩
+#                │ linear(32) │
+#                │ elu        │
+#                │ linear(32) │
+#                │ elu        │
+#                └──────┬─────┘
+# shared                │
+# ......................│.......................
+# non-shared            │
+#           ┏━━━━━━━━━━━▼━━━━━━━━━━━┓
+#           ┃  policy|value output  ┃
+#           ┡━━━━━━━━━━━━━━━━━━━━━━━┩
+#           │ linear(num_actions|1) │
+#           └───────────┬───────────┘
+#                       ▼
 models:
   separate: False
   policy:  # see gaussian_model parameters
