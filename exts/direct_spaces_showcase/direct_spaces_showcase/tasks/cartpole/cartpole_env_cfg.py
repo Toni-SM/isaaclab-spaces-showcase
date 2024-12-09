@@ -7,13 +7,12 @@ from __future__ import annotations
 
 from gymnasium import spaces
 
-from omni.isaac.lab_assets.cartpole import CARTPOLE_CFG
-
 from omni.isaac.lab.assets import ArticulationCfg
 from omni.isaac.lab.envs import DirectRLEnvCfg
 from omni.isaac.lab.scene import InteractiveSceneCfg
 from omni.isaac.lab.sim import SimulationCfg
 from omni.isaac.lab.utils import configclass
+from omni.isaac.lab_assets.cartpole import CARTPOLE_CFG
 
 
 @configclass
@@ -48,6 +47,7 @@ class CartpoleBaseEnvCfg(DirectRLEnvCfg):
     rew_scale_cart_vel = -0.01
     rew_scale_pole_vel = -0.005
 
+
 @configclass
 class BoxBoxEnvCfg(CartpoleBaseEnvCfg):
     """
@@ -70,8 +70,10 @@ class BoxBoxEnvCfg(CartpoleBaseEnvCfg):
         0    Cart DOF effort scale: [-1, 1]
         ===  ===
     """
+
     observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
 
 @configclass
 class BoxDiscreteEnvCfg(CartpoleBaseEnvCfg):
@@ -97,8 +99,10 @@ class BoxDiscreteEnvCfg(CartpoleBaseEnvCfg):
         2    Positive maximum cart DOF effort
         ===  ===
     """
+
     observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
     action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
 
 @configclass
 class TupleBoxEnvCfg(CartpoleBaseEnvCfg):
@@ -120,11 +124,47 @@ class TupleBoxEnvCfg(CartpoleBaseEnvCfg):
         0    Cart DOF effort scale: [-1, 1]
         ===  ===
     """
-    observation_space = spaces.Tuple((
-        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-    ))  # or for simplicity: (2, 2)
+
+    observation_space = spaces.Tuple(
+        (
+            spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+            spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        )
+    )  # or for simplicity: (2, 2)
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
+class TupleDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Tuple`` with 2 constituent spaces)
+
+        ===  ====
+        Idx  Observation
+        ===  ====
+        0    DOF positions
+        1    DOF velocities
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Discrete`` with 3 elements)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Negative maximum cart DOF effort
+        1    Zero cart DOF effort
+        2    Positive maximum cart DOF effort
+        ===  ===
+    """
+
+    observation_space = spaces.Tuple(
+        (
+            spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+            spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        )
+    )  # or for simplicity: (2, 2)
+    action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
 
 @configclass
 class DictBoxEnvCfg(CartpoleBaseEnvCfg):
@@ -146,8 +186,11 @@ class DictBoxEnvCfg(CartpoleBaseEnvCfg):
         0    Cart DOF effort scale: [-1, 1]
         ===  ===
     """
-    observation_space = spaces.Dict({
-        "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-    })  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
+
+    observation_space = spaces.Dict(
+        {
+            "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+            "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        }
+    )  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
