@@ -18,6 +18,7 @@ from omni.isaac.lab.utils.math import sample_uniform
 
 from .cartpole_env_cfg import CartpoleBaseEnvCfg
 
+
 class CartpoleEnv(DirectRLEnv):
     cfg: CartpoleBaseEnvCfg
 

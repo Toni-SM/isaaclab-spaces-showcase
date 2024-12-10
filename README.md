@@ -71,7 +71,7 @@ Run
   <tr>
     <td><strong>Dict</strong></td>
     <td>x</td>
-    <td></td>
+    <td>X</td>
     <td></td>
     <td></td>
     <td></td>

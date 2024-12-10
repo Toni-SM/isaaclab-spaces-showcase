@@ -194,3 +194,35 @@ class DictBoxEnvCfg(CartpoleBaseEnvCfg):
         }
     )  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
+class DictDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
+
+        ================  ====
+        Key               Observation
+        ================  ====
+        joint-positions   DOF positions
+        joint-velocities  DOF velocities
+        ================  ===
+
+    * Action space (``~gymnasium.spaces.Discrete`` with 3 elements)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Negative maximum cart DOF effort
+        1    Zero cart DOF effort
+        2    Positive maximum cart DOF effort
+        ===  ===
+    """
+
+    observation_space = spaces.Dict(
+        {
+            "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+            "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        }
+    )  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
+    action_space = spaces.Discrete(3)  # or for simplicity: {3}
