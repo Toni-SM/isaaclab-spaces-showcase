@@ -104,9 +104,8 @@ from isaaclab_tasks.utils.hydra import hydra_task_config
 try:
     import spaces_showcase  # noqa: F401
 except ModuleNotFoundError:
-    sys.path.insert(
-        0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "exts", "spaces_showcase")
-    )
+    root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    sys.path.insert(0, os.path.join(root_dir, "exts", "spaces_showcase"))
     import spaces_showcase  # noqa: F401
 
 
