@@ -107,6 +107,7 @@ agent:
   kl_threshold: 0.0
   rewards_shaper_scale: 0.1
   time_limit_bootstrap: False
+  mixed_precision: False
   # logging and checkpoint
   experiment:
     directory: "cartpole_direct_tuple_box"
