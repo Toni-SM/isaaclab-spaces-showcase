@@ -24,16 +24,19 @@ simulation_app = app_launcher.app
 
 """Rest everything follows."""
 
+import gymnasium as gym
 import os
 import sys
-import gymnasium as gym
 from prettytable import PrettyTable
 
 try:
     import spaces_showcase  # noqa: F401
 except ModuleNotFoundError:
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "exts", "spaces_showcase"))
+    sys.path.insert(
+        0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "exts", "spaces_showcase")
+    )
     import spaces_showcase  # noqa: F401
+
 
 def main():
     """Print all environments registered in `spaces_showcase` extension."""
