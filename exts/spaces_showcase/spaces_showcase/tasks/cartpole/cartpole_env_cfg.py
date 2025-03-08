@@ -1,18 +1,14 @@
-# Copyright (c) 2022-2024, The Isaac Lab Project Developers.
-# All rights reserved.
-#
-# SPDX-License-Identifier: BSD-3-Clause
-
 from __future__ import annotations
 
 from gymnasium import spaces
 
-from omni.isaac.lab.assets import ArticulationCfg
-from omni.isaac.lab.envs import DirectRLEnvCfg
-from omni.isaac.lab.scene import InteractiveSceneCfg
-from omni.isaac.lab.sim import SimulationCfg
-from omni.isaac.lab.utils import configclass
-from omni.isaac.lab_assets.cartpole import CARTPOLE_CFG
+from isaaclab_assets.robots.cartpole import CARTPOLE_CFG
+
+from isaaclab.assets import ArticulationCfg
+from isaaclab.envs import DirectRLEnvCfg
+from isaaclab.scene import InteractiveSceneCfg
+from isaaclab.sim import SimulationCfg
+from isaaclab.utils import configclass
 
 
 @configclass
@@ -71,8 +67,7 @@ class BoxBoxEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
     """
 
-    observation_space = spaces.Discrete(16)  # or for simplicity: 4 or [4]
-    # observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
+    observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
 
 
@@ -126,12 +121,10 @@ class TupleBoxEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
     """
 
-    observation_space = spaces.Tuple(
-        (
-            spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-            spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        )
-    )  # or for simplicity: (2, 2)
+    observation_space = spaces.Tuple((
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    ))  # or for simplicity: (2, 2)
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
 
 
@@ -158,12 +151,10 @@ class TupleDiscreteEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
     """
 
-    observation_space = spaces.Tuple(
-        (
-            spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-            spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        )
-    )  # or for simplicity: (2, 2)
+    observation_space = spaces.Tuple((
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    ))  # or for simplicity: (2, 2)
     action_space = spaces.Discrete(3)  # or for simplicity: {3}
 
 
@@ -188,12 +179,10 @@ class DictBoxEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
     """
 
-    observation_space = spaces.Dict(
-        {
-            "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-            "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        }
-    )  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
+    observation_space = spaces.Dict({
+        "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    })  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
 
 
@@ -220,10 +209,8 @@ class DictDiscreteEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
     """
 
-    observation_space = spaces.Dict(
-        {
-            "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-            "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        }
-    )  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
+    observation_space = spaces.Dict({
+        "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    })  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
     action_space = spaces.Discrete(3)  # or for simplicity: {3}

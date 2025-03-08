@@ -1,8 +1,3 @@
-# Copyright (c) 2022-2024, The Isaac Lab Project Developers.
-# All rights reserved.
-#
-# SPDX-License-Identifier: BSD-3-Clause
-
 from __future__ import annotations
 
 import gymnasium as gym
@@ -10,11 +5,11 @@ import math
 import torch
 from collections.abc import Sequence
 
-import omni.isaac.lab.sim as sim_utils
-from omni.isaac.lab.assets import Articulation
-from omni.isaac.lab.envs import DirectRLEnv
-from omni.isaac.lab.sim.spawners.from_files import GroundPlaneCfg, spawn_ground_plane
-from omni.isaac.lab.utils.math import sample_uniform
+import isaaclab.sim as sim_utils
+from isaaclab.assets import Articulation
+from isaaclab.envs import DirectRLEnv
+from isaaclab.sim.spawners.from_files import GroundPlaneCfg, spawn_ground_plane
+from isaaclab.utils.math import sample_uniform
 
 from .cartpole_env_cfg import CartpoleBaseEnvCfg
 
@@ -35,9 +30,8 @@ class CartpoleEnv(DirectRLEnv):
         self.cartpole = Articulation(self.cfg.robot_cfg)
         # add ground plane
         spawn_ground_plane(prim_path="/World/ground", cfg=GroundPlaneCfg())
-        # clone, filter, and replicate
+        # clone and replicate
         self.scene.clone_environments(copy_from_source=False)
-        self.scene.filter_collisions(global_prim_paths=[])
         # add articulation to scene
         self.scene.articulations["cartpole"] = self.cartpole
         # add lights
@@ -76,16 +70,21 @@ class CartpoleEnv(DirectRLEnv):
             )
         # - Discrete
         if isinstance(self.single_observation_space["policy"], gym.spaces.Discrete):
-            data = torch.cat(
-                (
-                    self.joint_pos[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
-                    self.joint_pos[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
-                    self.joint_vel[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
-                    self.joint_vel[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
-                ),
-                dim=-1,
-            ) >= 0
-            condition = lambda x: torch.prod(data == torch.tensor(x, device=self.device), axis=-1).to(torch.bool)
+            data = (
+                torch.cat(
+                    (
+                        self.joint_pos[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
+                        self.joint_pos[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
+                        self.joint_vel[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
+                        self.joint_vel[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
+                    ),
+                    dim=-1,
+                )
+                >= 0
+            )
+            condition = lambda x: torch.prod(data == torch.tensor(x, device=self.device), axis=-1).to(  # noqa: E731
+                torch.bool
+            )
 
             obs = torch.zeros((self.num_envs), dtype=torch.int32, device=self.device)  # case: n = 0
             obs = torch.where(condition([False, False, False, True]), 1, obs)

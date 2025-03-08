@@ -1,17 +1,12 @@
-# Copyright (c) 2022-2024, The Isaac Lab Project Developers.
-# All rights reserved.
-#
-# SPDX-License-Identifier: BSD-3-Clause
-
 from __future__ import annotations
 
 import torch
 
-from omni.isaac.lab.envs import DirectRLEnv, DirectRLEnvCfg
-from omni.isaac.lab.envs.utils.spaces import sample_space
-from omni.isaac.lab.scene import InteractiveSceneCfg
-from omni.isaac.lab.sim import SimulationCfg
-from omni.isaac.lab.utils import configclass
+from isaaclab.envs import DirectRLEnv, DirectRLEnvCfg
+from isaaclab.envs.utils.spaces import sample_space
+from isaaclab.scene import InteractiveSceneCfg
+from isaaclab.sim import SimulationCfg
+from isaaclab.utils import configclass
 
 
 @configclass
@@ -36,10 +31,12 @@ class EmptyEnv(DirectRLEnv):
     def __init__(self, cfg: EmptyEnvCfg, render_mode: str | None = None, **kwargs):
         super().__init__(cfg, render_mode, **kwargs)
 
-        self.observation_sample = sample_space(self.single_observation_space["policy"], device=self.device, batch_size=self.num_envs)
+        self.observation_sample = sample_space(
+            self.single_observation_space["policy"], device=self.device, batch_size=self.num_envs
+        )
         self.reward_sample = torch.ones_like(self.episode_length_buf, dtype=torch.float32)
         self.terminated_sample = torch.zeros_like(self.episode_length_buf, dtype=torch.bool)
-        
+
     def _pre_physics_step(self, actions: torch.Tensor) -> None:
         self.actions = actions
 
