@@ -1,13 +1,21 @@
+# Copyright (c) 2022-2025, The Isaac Lab Project Developers.
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 """
-Script to print all the available environments in the extension.
+Script to print all the available environments in Isaac Lab.
 
 The script iterates over all registered environments and stores the details in a table.
 It prints the name of the environment, the entry point and the config file.
+
+All the environments are registered in the `isaaclab_tasks` extension. They start
+with `Isaac` in their name.
 """
 
 """Launch Isaac Sim Simulator first."""
 
-from omni.isaac.lab.app import AppLauncher
+from isaaclab.app import AppLauncher
 
 # launch omniverse app
 app_launcher = AppLauncher(headless=True)
@@ -16,18 +24,22 @@ simulation_app = app_launcher.app
 
 """Rest everything follows."""
 
+import os
+import sys
 import gymnasium as gym
 from prettytable import PrettyTable
 
-# Import extensions to set up environment tasks
-import direct_spaces_showcase.tasks  # noqa: F401
-
+try:
+    import spaces_showcase  # noqa: F401
+except ModuleNotFoundError:
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "exts", "spaces_showcase"))
+    import spaces_showcase  # noqa: F401
 
 def main():
-    """Print all environments registered in Isaac Lab Template Extension extension."""
+    """Print all environments registered in `spaces_showcase` extension."""
     # print all the available environments
-    table = PrettyTable(["S. No.", "Task Name", "Entry Point", "Config"])
-    table.title = "Available Environments in Isaac Lab Template Extension"
+    table = PrettyTable(["#", "Task Name", "Entry Point", "Config"])
+    table.title = "Available Environments"
     # set alignment of table columns
     table.align["Task Name"] = "l"
     table.align["Entry Point"] = "l"
@@ -37,7 +49,7 @@ def main():
     index = 0
     # acquire all Isaac environments names
     for task_spec in gym.registry.values():
-        if "Spaces-" in task_spec.id:
+        if "Spaces-Showcase" in task_spec.id:
             # add details to table
             table.add_row([index + 1, task_spec.id, task_spec.entry_point, task_spec.kwargs["env_cfg_entry_point"]])
             # increment count

@@ -74,6 +74,35 @@ class CartpoleEnv(DirectRLEnv):
                 ),
                 dim=-1,
             )
+        # - Discrete
+        if isinstance(self.single_observation_space["policy"], gym.spaces.Discrete):
+            data = torch.cat(
+                (
+                    self.joint_pos[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
+                    self.joint_pos[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
+                    self.joint_vel[:, self._pole_dof_idx[0]].unsqueeze(dim=1),
+                    self.joint_vel[:, self._cart_dof_idx[0]].unsqueeze(dim=1),
+                ),
+                dim=-1,
+            ) >= 0
+            condition = lambda x: torch.prod(data == torch.tensor(x, device=self.device), axis=-1).to(torch.bool)
+
+            obs = torch.zeros((self.num_envs), dtype=torch.int32, device=self.device)  # case: n = 0
+            obs = torch.where(condition([False, False, False, True]), 1, obs)
+            obs = torch.where(condition([False, False, True, False]), 2, obs)
+            obs = torch.where(condition([False, False, True, True]), 3, obs)
+            obs = torch.where(condition([False, True, False, False]), 4, obs)
+            obs = torch.where(condition([False, True, False, True]), 5, obs)
+            obs = torch.where(condition([False, True, True, False]), 6, obs)
+            obs = torch.where(condition([False, True, True, True]), 7, obs)
+            obs = torch.where(condition([True, False, False, False]), 8, obs)
+            obs = torch.where(condition([True, False, False, True]), 9, obs)
+            obs = torch.where(condition([True, False, True, False]), 10, obs)
+            obs = torch.where(condition([True, False, True, True]), 11, obs)
+            obs = torch.where(condition([True, True, False, False]), 12, obs)
+            obs = torch.where(condition([True, True, False, True]), 13, obs)
+            obs = torch.where(condition([True, True, True, False]), 14, obs)
+            obs = torch.where(condition([True, True, True, True]), 15, obs)
         # composite spaces
         # - Tuple
         elif isinstance(self.single_observation_space["policy"], gym.spaces.Tuple):

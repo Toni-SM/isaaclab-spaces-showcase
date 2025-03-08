@@ -16,7 +16,7 @@ from . import agents
 ##
 
 gym.register(
-    id="Spaces-Box-Box-Cartpole-Direct-v0",
+    id="Spaces-Showcase-Box-Box-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,
     kwargs={
@@ -26,7 +26,7 @@ gym.register(
 )
 
 gym.register(
-    id="Spaces-Box-Discrete-Cartpole-Direct-v0",
+    id="Spaces-Showcase-Box-Discrete-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,
     kwargs={
@@ -36,7 +36,7 @@ gym.register(
 )
 
 gym.register(
-    id="Spaces-Tuple-Box-Cartpole-Direct-v0",
+    id="Spaces-Showcase-Tuple-Box-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,
     kwargs={
@@ -46,7 +46,7 @@ gym.register(
 )
 
 gym.register(
-    id="Spaces-Tuple-Discrete-Cartpole-Direct-v0",
+    id="Spaces-Showcase-Tuple-Discrete-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,
     kwargs={
@@ -56,7 +56,7 @@ gym.register(
 )
 
 gym.register(
-    id="Spaces-Dict-Box-Cartpole-Direct-v0",
+    id="Spaces-Showcase-Dict-Box-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,
     kwargs={
@@ -66,7 +66,7 @@ gym.register(
 )
 
 gym.register(
-    id="Spaces-Dict-Discrete-Cartpole-Direct-v0",
+    id="Spaces-Showcase-Dict-Discrete-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
     disable_env_checker=True,
     kwargs={

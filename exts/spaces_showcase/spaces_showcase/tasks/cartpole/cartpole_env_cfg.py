@@ -71,7 +71,8 @@ class BoxBoxEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
     """
 
-    observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
+    observation_space = spaces.Discrete(16)  # or for simplicity: 4 or [4]
+    # observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
 
 

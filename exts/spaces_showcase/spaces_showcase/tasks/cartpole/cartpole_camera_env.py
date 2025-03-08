@@ -9,8 +9,6 @@ import math
 import torch
 from collections.abc import Sequence
 
-from omni.isaac.lab_assets.cartpole import CARTPOLE_CFG
-
 import omni.isaac.lab.sim as sim_utils
 from omni.isaac.lab.assets import Articulation, ArticulationCfg
 from omni.isaac.lab.envs import DirectRLEnv, DirectRLEnvCfg, ViewerCfg
@@ -19,6 +17,7 @@ from omni.isaac.lab.sensors import TiledCamera, TiledCameraCfg, save_images_to_f
 from omni.isaac.lab.sim import SimulationCfg
 from omni.isaac.lab.utils import configclass
 from omni.isaac.lab.utils.math import sample_uniform
+from omni.isaac.lab_assets.cartpole import CARTPOLE_CFG
 
 
 @configclass
@@ -91,7 +90,6 @@ class CartpoleDepthCameraEnvCfg(CartpoleRGBCameraEnvCfg):
 
 
 class CartpoleCameraEnv(DirectRLEnv):
-
     cfg: CartpoleRGBCameraEnvCfg | CartpoleDepthCameraEnvCfg
 
     def __init__(
