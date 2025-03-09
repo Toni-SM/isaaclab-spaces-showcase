@@ -34,12 +34,12 @@ Run
 <tbody>
   <tr>
     <td colspan="2" rowspan="2"></td>
-    <td colspan="5">action</td>
+    <td colspan="5" style="text-align: center">action space</td>
   </tr>
   <tr>
     <td><strong>Box</strong></td>
     <td><strong>Discrete</strong></td>
-    <td><strong>MultiDiscrete</strong></td>
+    <td><strong>MultiDiscrete*</strong></td>
     <td><strong>Dict</strong></td>
     <td><strong>Tuple</strong></td>
   </tr>
@@ -48,7 +48,7 @@ Run
     <td><strong>Box</strong></td>
     <td>x</td>
     <td>x</td>
-    <td></td>
+    <td>x</td>
     <td></td>
     <td></td>
   </tr>
@@ -71,8 +71,8 @@ Run
   <tr>
     <td><strong>Dict</strong></td>
     <td>x</td>
-    <td>X</td>
-    <td></td>
+    <td>x</td>
+    <td>x</td>
     <td></td>
     <td></td>
   </tr>
@@ -80,8 +80,10 @@ Run
     <td><strong>Tuple</strong></td>
     <td>x</td>
     <td>x</td>
-    <td></td>
+    <td>x</td>
     <td></td>
     <td></td>
   </tr>
 </tbody></table>
+
+* MultiDiscrete is currently supported in the skrl's [develop](https://github.com/Toni-SM/skrl/tree/develop) branch.
