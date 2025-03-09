@@ -49,9 +49,9 @@ class BoxBoxEnvCfg(CartpoleBaseEnvCfg):
     """
     * Observation space (``~gymnasium.spaces.Box`` with shape (4,))
 
-        ===  ====
+        ===  ===
         Idx  Observation
-        ===  ====
+        ===  ===
         0    Pole DOF position
         1    Pole DOF velocity
         2    Cart DOF position
@@ -76,9 +76,9 @@ class BoxDiscreteEnvCfg(CartpoleBaseEnvCfg):
     """
     * Observation space (``~gymnasium.spaces.Box`` with shape (4,))
 
-        ===  ====
+        ===  ===
         Idx  Observation
-        ===  ====
+        ===  ===
         0    Pole DOF position
         1    Pole DOF velocity
         2    Cart DOF position
@@ -90,8 +90,8 @@ class BoxDiscreteEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
         N    Action
         ===  ===
-        0    Negative maximum cart DOF effort
-        1    Zero cart DOF effort
+        0    Zero cart DOF effort
+        1    Negative maximum cart DOF effort
         2    Positive maximum cart DOF effort
         ===  ===
     """
@@ -101,61 +101,39 @@ class BoxDiscreteEnvCfg(CartpoleBaseEnvCfg):
 
 
 @configclass
-class TupleBoxEnvCfg(CartpoleBaseEnvCfg):
+class BoxMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     """
-    * Observation space (``~gymnasium.spaces.Tuple`` with 2 constituent spaces)
+    * Observation space (``~gymnasium.spaces.Box`` with shape (4,))
 
-        ===  ====
+        ===  ===
         Idx  Observation
-        ===  ====
-        0    DOF positions
-        1    DOF velocities
+        ===  ===
+        0    Pole DOF position
+        1    Pole DOF velocity
+        2    Cart DOF position
+        3    Cart DOF velocity
         ===  ===
 
-    * Action space (``~gymnasium.spaces.Box`` with shape (1,))
-
-        ===  ===
-        Idx  Action
-        ===  ===
-        0    Cart DOF effort scale: [-1, 1]
-        ===  ===
-    """
-
-    observation_space = spaces.Tuple((
-        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-    ))  # or for simplicity: (2, 2)
-    action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
-
-
-@configclass
-class TupleDiscreteEnvCfg(CartpoleBaseEnvCfg):
-    """
-    * Observation space (``~gymnasium.spaces.Tuple`` with 2 constituent spaces)
-
-        ===  ====
-        Idx  Observation
-        ===  ====
-        0    DOF positions
-        1    DOF velocities
-        ===  ===
-
-    * Action space (``~gymnasium.spaces.Discrete`` with 3 elements)
+    * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
 
         ===  ===
         N    Action
         ===  ===
-        0    Negative maximum cart DOF effort
-        1    Zero cart DOF effort
-        2    Positive maximum cart DOF effort
+        0    Zero cart DOF effort
+        1    Half of maximum cart DOF effort
+        2    Maximum cart DOF effort
+        ===  ===
+
+        ===  ===
+        M    Action
+        ===  ===
+        0    Negative effort (one side)
+        1    Positive effort (other side)
         ===  ===
     """
 
-    observation_space = spaces.Tuple((
-        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
-    ))  # or for simplicity: (2, 2)
-    action_space = spaces.Discrete(3)  # or for simplicity: {3}
+    observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=(4,))  # or for simplicity: 4 or [4]
+    action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
 
 
 @configclass
@@ -163,9 +141,9 @@ class DictBoxEnvCfg(CartpoleBaseEnvCfg):
     """
     * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
 
-        ================  ====
+        ================  ===
         Key               Observation
-        ================  ====
+        ================  ===
         joint-positions   DOF positions
         joint-velocities  DOF velocities
         ================  ===
@@ -191,9 +169,9 @@ class DictDiscreteEnvCfg(CartpoleBaseEnvCfg):
     """
     * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
 
-        ================  ====
+        ================  ===
         Key               Observation
-        ================  ====
+        ================  ===
         joint-positions   DOF positions
         joint-velocities  DOF velocities
         ================  ===
@@ -203,8 +181,8 @@ class DictDiscreteEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
         N    Action
         ===  ===
-        0    Negative maximum cart DOF effort
-        1    Zero cart DOF effort
+        0    Zero cart DOF effort
+        1    Negative maximum cart DOF effort
         2    Positive maximum cart DOF effort
         ===  ===
     """
@@ -214,3 +192,135 @@ class DictDiscreteEnvCfg(CartpoleBaseEnvCfg):
         "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
     })  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
     action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
+
+@configclass
+class DictMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
+
+        ================  ===
+        Key               Observation
+        ================  ===
+        joint-positions   DOF positions
+        joint-velocities  DOF velocities
+        ================  ===
+
+    * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Zero cart DOF effort
+        1    Half of maximum cart DOF effort
+        2    Maximum cart DOF effort
+        ===  ===
+
+        ===  ===
+        M    Action
+        ===  ===
+        0    Negative effort (one side)
+        1    Positive effort (other side)
+        ===  ===
+    """
+
+    observation_space = spaces.Dict({
+        "joint-positions": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    })  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
+    action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
+
+
+@configclass
+class TupleBoxEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Tuple`` with 2 constituent spaces)
+
+        ===  ===
+        Idx  Observation
+        ===  ===
+        0    DOF positions
+        1    DOF velocities
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Box`` with shape (1,))
+
+        ===  ===
+        Idx  Action
+        ===  ===
+        0    Cart DOF effort scale: [-1, 1]
+        ===  ===
+    """
+
+    observation_space = spaces.Tuple((
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    ))  # or for simplicity: (2, 2)
+    action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
+class TupleDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Tuple`` with 2 constituent spaces)
+
+        ===  ===
+        Idx  Observation
+        ===  ===
+        0    DOF positions
+        1    DOF velocities
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Discrete`` with 3 elements)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Zero cart DOF effort
+        1    Negative maximum cart DOF effort
+        2    Positive maximum cart DOF effort
+        ===  ===
+    """
+
+    observation_space = spaces.Tuple((
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    ))  # or for simplicity: (2, 2)
+    action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
+
+@configclass
+class TupleMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Tuple`` with 2 constituent spaces)
+
+        ===  ===
+        Idx  Observation
+        ===  ===
+        0    DOF positions
+        1    DOF velocities
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Zero cart DOF effort
+        1    Half of maximum cart DOF effort
+        2    Maximum cart DOF effort
+        ===  ===
+
+        ===  ===
+        M    Action
+        ===  ===
+        0    Negative effort (one side)
+        1    Positive effort (other side)
+        ===  ===
+    """
+
+    observation_space = spaces.Tuple((
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+    ))  # or for simplicity: (2, 2)
+    action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]

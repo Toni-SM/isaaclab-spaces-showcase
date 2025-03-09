@@ -32,8 +32,8 @@ seed: 42
 #                       ▼
 models:
   separate: False
-  policy:  # see categorical_model parameters
-    class: CategoricalMixin
+  policy:  # see multicategorical_model parameters
+    class: MultiCategoricalMixin
     unnormalized_log_prob: True
     network:
       - name: net_pos
@@ -106,7 +106,7 @@ agent:
   mixed_precision: False
   # logging and checkpoint
   experiment:
-    directory: "cartpole_direct_dict_discrete"
+    directory: "cartpole_direct_dict_multidiscrete"
     experiment_name: ""
     write_interval: auto
     checkpoint_interval: auto

@@ -48,9 +48,17 @@ class CartpoleEnv(DirectRLEnv):
             target = self.cfg.max_effort * self.actions
         # - Discrete
         if isinstance(self.single_action_space, gym.spaces.Discrete):
-            target = torch.zeros_like(self.actions, dtype=torch.float32)  # case: n = 1
-            target = torch.where(self.actions == 0, -self.cfg.max_effort, target)
+            target = torch.zeros((self.num_envs, 1), dtype=torch.float32, device=self.device)
+            target = torch.where(self.actions == 1, -self.cfg.max_effort, target)
             target = torch.where(self.actions == 2, self.cfg.max_effort, target)
+        # - MultiDiscrete
+        if isinstance(self.single_action_space, gym.spaces.MultiDiscrete):
+            # value
+            target = torch.zeros((self.num_envs, 1), dtype=torch.float32, device=self.device)
+            target = torch.where(self.actions[:, [0]] == 1, self.cfg.max_effort / 2.0, target)
+            target = torch.where(self.actions[:, [0]] == 2, self.cfg.max_effort, target)
+            # direction
+            target = torch.where(self.actions[:, [1]] == 0, -target, target)
 
         # set target
         self.cartpole.set_joint_effort_target(target, joint_ids=self._cart_dof_idx)

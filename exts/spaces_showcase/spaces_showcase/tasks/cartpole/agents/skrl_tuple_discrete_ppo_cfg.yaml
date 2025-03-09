@@ -32,7 +32,7 @@ seed: 42
 #                       ▼
 models:
   separate: False
-  policy:  # see gaussian_model parameters
+  policy:  # see categorical_model parameters
     class: CategoricalMixin
     unnormalized_log_prob: True
     network:
