@@ -12,11 +12,11 @@ List tasks
 python scripts/list_envs.py
 ```
 
-### Showcased spaces
+## Showcased spaces
 
-#### Cartpole task
+### Cartpole task
 
-Run a task
+Train a task
 
 ```bash
 python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartpole-Direct-v0 --headless
@@ -78,9 +78,9 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
   </tr>
 </tbody></table>
 
-#### Cartpole-Camera task
+### Cartpole-Camera task
 
-Run a task
+Train a task
 
 ```bash
 python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartpole-Camera-Direct-v0 --enable_cameras --headless
