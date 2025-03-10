@@ -33,7 +33,7 @@ try:
     import spaces_showcase  # noqa: F401
 except ModuleNotFoundError:
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    sys.path.insert(0, os.path.join(root_dir, "exts", "spaces_showcase"))
+    sys.path.insert(0, os.path.join(root_dir, "source", "spaces_showcase"))
     import spaces_showcase  # noqa: F401
 
 

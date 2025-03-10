@@ -3,7 +3,7 @@
 Install (optional)
 
 ```bash
-python -m pip install -e exts/spaces_showcase
+python -m pip install -e source/spaces_showcase
 ```
 
 List tasks
