@@ -47,18 +47,20 @@ class CartpoleEnv(DirectRLEnv):
         if isinstance(self.single_action_space, gym.spaces.Box):
             target = self.cfg.max_effort * self.actions
         # - Discrete
-        if isinstance(self.single_action_space, gym.spaces.Discrete):
+        elif isinstance(self.single_action_space, gym.spaces.Discrete):
             target = torch.zeros((self.num_envs, 1), dtype=torch.float32, device=self.device)
             target = torch.where(self.actions == 1, -self.cfg.max_effort, target)
             target = torch.where(self.actions == 2, self.cfg.max_effort, target)
         # - MultiDiscrete
-        if isinstance(self.single_action_space, gym.spaces.MultiDiscrete):
+        elif isinstance(self.single_action_space, gym.spaces.MultiDiscrete):
             # value
             target = torch.zeros((self.num_envs, 1), dtype=torch.float32, device=self.device)
             target = torch.where(self.actions[:, [0]] == 1, self.cfg.max_effort / 2.0, target)
             target = torch.where(self.actions[:, [0]] == 2, self.cfg.max_effort, target)
             # direction
             target = torch.where(self.actions[:, [1]] == 0, -target, target)
+        else:
+            raise NotImplementedError(f"Action space {type(self.single_action_space)} not implemented")
 
         # set target
         self.cartpole.set_joint_effort_target(target, joint_ids=self._cart_dof_idx)
@@ -77,7 +79,7 @@ class CartpoleEnv(DirectRLEnv):
                 dim=-1,
             )
         # - Discrete
-        if isinstance(self.single_observation_space["policy"], gym.spaces.Discrete):
+        elif isinstance(self.single_observation_space["policy"], gym.spaces.Discrete):
             data = (
                 torch.cat(
                     (
@@ -94,7 +96,7 @@ class CartpoleEnv(DirectRLEnv):
                 torch.bool
             )
 
-            obs = torch.zeros((self.num_envs), dtype=torch.int32, device=self.device)  # case: n = 0
+            obs = torch.zeros((self.num_envs), dtype=torch.int32, device=self.device)
             obs = torch.where(condition([False, False, False, True]), 1, obs)
             obs = torch.where(condition([False, False, True, False]), 2, obs)
             obs = torch.where(condition([False, False, True, True]), 3, obs)

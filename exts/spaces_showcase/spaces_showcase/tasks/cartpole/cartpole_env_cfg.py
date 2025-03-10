@@ -137,6 +137,45 @@ class BoxMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
 
 
 @configclass
+class DiscreteBoxEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Discrete`` with 16 elements)
+
+        ===  ===
+        N    Observation (DOF signs: pole position, cart position, pole velocity, cart velocity)
+        ===  ===
+        0    - - - -
+        1    - - - +
+        2    - - + -
+        3    - - + +
+        4    - + - -
+        5    - + - +
+        6    - + + -
+        7    - + + +
+        8    + - - -
+        9    + - - +
+        10   + - + -
+        11   + - + +
+        12   + + - -
+        13   + + - +
+        14   + + + -
+        15   + + + +
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Box`` with shape (1,))
+
+        ===  ===
+        Idx  Action
+        ===  ===
+        0    Cart DOF effort scale: [-1, 1]
+        ===  ===
+    """
+
+    observation_space = spaces.Discrete(16)  # or for simplicity: {16}
+    action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
 class DictBoxEnvCfg(CartpoleBaseEnvCfg):
     """
     * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
