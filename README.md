@@ -1,12 +1,14 @@
 # Spaces showcase tasks for Isaac Lab
 
-Install (optional)
+## Setup
+
+Install (**optional**, because the scripts will automatically add the project to the PYTHONPATH if it is not installed).
 
 ```bash
 python -m pip install -e source/spaces_showcase
 ```
 
-List tasks
+List available tasks.
 
 ```bash
 python scripts/list_envs.py
@@ -16,7 +18,7 @@ python scripts/list_envs.py
 
 ### Cartpole task
 
-Train a task
+Train a task for a specific observation and action space type.
 
 ```bash
 python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartpole-Direct-v0 --headless
@@ -31,7 +33,7 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
   <tr>
     <td><strong>Box</strong></td>
     <td><strong>Discrete</strong></td>
-    <td><strong>MultiDiscrete<sup>(2)</sup></strong></td>
+    <td><strong>MultiDiscrete&nbsp;<sup>(2)</sup></strong></td>
     <td><strong>Dict</strong></td>
     <td><strong>Tuple</strong></td>
   </tr>
@@ -45,7 +47,7 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
     <td></td>
   </tr>
   <tr>
-    <td><strong>Discrete<sup>(1)</sup></strong></td>
+    <td><strong>Discrete&nbsp;<sup>(1)</sup></strong></td>
     <td></td>
     <td></td>
     <td></td>
@@ -53,7 +55,7 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
     <td></td>
   </tr>
   <tr>
-    <td><strong>MultiDiscrete<sup>(1)</sup></strong></td>
+    <td><strong>MultiDiscrete&nbsp;<sup>(1)</sup></strong></td>
     <td></td>
     <td></td>
     <td></td>
@@ -80,7 +82,7 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
 
 ### Cartpole-Camera task
 
-Train a task
+Train a task for a specific observation and action space type.
 
 ```bash
 python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartpole-Camera-Direct-v0 --enable_cameras --headless
@@ -95,7 +97,7 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
   <tr>
     <td><strong>Box</strong></td>
     <td><strong>Discrete</strong></td>
-    <td><strong>MultiDiscrete<sup>(2)</sup></strong></td>
+    <td><strong>MultiDiscrete&nbsp;<sup>(2)</sup></strong></td>
     <td><strong>Dict</strong></td>
     <td><strong>Tuple</strong></td>
   </tr>
@@ -109,7 +111,7 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
     <td></td>
   </tr>
   <tr>
-    <td><strong>Discrete<sup>(1)</sup></strong></td>
+    <td><strong>Discrete&nbsp;<sup>(1)</sup></strong></td>
     <td></td>
     <td></td>
     <td></td>
@@ -117,7 +119,7 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
     <td></td>
   </tr>
   <tr>
-    <td><strong>MultiDiscrete<sup>(1)</sup></strong></td>
+    <td><strong>MultiDiscrete&nbsp;<sup>(1)</sup></strong></td>
     <td></td>
     <td></td>
     <td></td>
