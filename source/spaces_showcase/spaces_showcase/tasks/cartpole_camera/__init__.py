@@ -44,3 +44,14 @@ gym.register(
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_box_multidiscrete_ppo_cfg.yaml",
     },
 )
+
+
+gym.register(
+    id="Spaces-Showcase-Dict-Box-Cartpole-Camera-Direct-v0",
+    entry_point=f"{__name__}.cartpole_camera_env:CartpoleCameraEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.cartpole_camera_env_cfg:DictBoxEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_dict_box_ppo_cfg.yaml",
+    },
+)

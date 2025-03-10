@@ -4,35 +4,43 @@ seed: 42
 # Models are instantiated using skrl's model instantiator utility
 # https://skrl.readthedocs.io/en/latest/api/utils/model_instantiators.html
 #
-#                      obs
-#                       │
-#            ┏━━━━━━━━━━▼━━━━━━━━━━┓
-#            ┃ features_extractor  ┃
-#            ┡━━━━━━━━━━━━━━━━━━━━━┩
-#            │ conv2d(32, 8, 4)    │
-#            │ relu                │
-#            │ conv2d(64, 4, 2)    │
-#            │ relu                │
-#            │ conv2d(64, 3, 1)    │
-#            │ relu                │
-#            │ flatten             │
-#            └──────────┬──────────┘
-#                       │
-#                ┏━━━━━━▼━━━━━━┓
-#                ┃     net     ┃
-#                ┡━━━━━━━━━━━━━┩
-#                │ linear(512) │
-#                │ elu         │
-#                └──────┬──────┘
-# shared                │
-# ......................│.......................
-# non-shared            │
-#           ┏━━━━━━━━━━━▼━━━━━━━━━━━┓
-#           ┃  policy|value output  ┃
-#           ┡━━━━━━━━━━━━━━━━━━━━━━━┩
-#           │ linear(num_actions|1) │
-#           └───────────┬───────────┘
-#                       ▼
+#         obs["camera"]      obs["joint-velocities"]
+#               │                        │
+#    ┏━━━━━━━━━━▼━━━━━━━━━━┓             │
+#    ┃ features_extractor  ┃             │
+#    ┡━━━━━━━━━━━━━━━━━━━━━┩             │
+#    │ conv2d(32, 8, 4)    │             │
+#    │ relu                │             │
+#    │ conv2d(64, 4, 2)    │             │
+#    │ relu                │             │
+#    │ conv2d(64, 3, 1)    │             │
+#    │ relu                │             │
+#    │ flatten             │             │
+#    │ linear(512)         │             │
+#    │ tanh                │             │
+#    │ linear(16)          │             │
+#    │ tanh                │             │
+#    └──────────┬──────────┘             |
+#               │                        │
+#               └─▶(concatenate)◀────────┘
+#                        │
+#                 ┏━━━━━━▼━━━━━┓
+#                 ┃     net    ┃
+#                 ┡━━━━━━━━━━━━┩
+#                 │ linear(32) │
+#                 │ elu        │
+#                 │ linear(32) │
+#                 │ elu        │
+#                 └──────┬─────┘
+# shared                 │
+# .......................│.......................
+# non-shared             │
+#            ┏━━━━━━━━━━━▼━━━━━━━━━━━┓
+#            ┃  policy|value output  ┃
+#            ┡━━━━━━━━━━━━━━━━━━━━━━━┩
+#            │ linear(num_actions|1) │
+#            └───────────┬───────────┘
+#                        ▼
 models:
   separate: False
   policy:  # see gaussian_model parameters
@@ -44,16 +52,18 @@ models:
     initial_log_std: 0.0
     network:
       - name: features_extractor
-        input: permute(STATES, (0, 3, 1, 2))  # PyTorch NHWC -> NCHW. Warning: don't permute for JAX since it expects NHWC
+        input: permute(STATES["camera"], (0, 3, 1, 2))  # PyTorch NHWC -> NCHW. Warning: don't permute for JAX since it expects NHWC
         layers:
           - conv2d: {out_channels: 32, kernel_size: 8, stride: 4, padding: 0}
           - conv2d: {out_channels: 64, kernel_size: 4, stride: 2, padding: 0}
           - conv2d: {out_channels: 64, kernel_size: 3, stride: 1, padding: 0}
           - flatten
-        activations: relu
+          - linear: 512
+          - linear: 16
+        activations: [relu, relu, relu, null, tanh, tanh]
       - name: net
-        input: features_extractor
-        layers: [512]
+        input: concatenate([features_extractor, STATES["joint-velocities"]])
+        layers: [32, 32]
         activations: elu
     output: ACTIONS
   value:  # see deterministic_model parameters
@@ -67,10 +77,12 @@ models:
           - conv2d: {out_channels: 64, kernel_size: 4, stride: 2, padding: 0}
           - conv2d: {out_channels: 64, kernel_size: 3, stride: 1, padding: 0}
           - flatten
-        activations: relu
+          - linear: 512
+          - linear: 16
+        activations: [relu, relu, relu, null, tanh, tanh]
       - name: net
-        input: features_extractor
-        layers: [512]
+        input: concatenate([features_extractor, STATES["joint-velocities"]])
+        layers: [32, 32]
         activations: elu
     output: ONE
 

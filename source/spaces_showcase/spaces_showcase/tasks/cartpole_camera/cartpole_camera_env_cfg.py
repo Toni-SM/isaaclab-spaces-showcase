@@ -85,3 +85,43 @@ class BoxBoxEnvCfg(CartpoleCameraBaseEnvCfg):
         low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)
     )  # or for simplicity: [height, width, 3]
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
+class DictBoxEnvCfg(CartpoleCameraBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
+
+        ================  ===
+        Key               Observation
+        ================  ===
+        joint-velocities  DOF velocities
+        camera            RGB image
+        ================  ===
+
+    * Action space (``~gymnasium.spaces.Box`` with shape (1,))
+
+        ===  ===
+        Idx  Action
+        ===  ===
+        0    Cart DOF effort scale: [-1, 1]
+        ===  ===
+    """
+
+    # camera
+    tiled_camera: TiledCameraCfg = TiledCameraCfg(
+        prim_path="/World/envs/env_.*/Camera",
+        offset=TiledCameraCfg.OffsetCfg(pos=(-5.0, 0.0, 2.0), rot=(1.0, 0.0, 0.0, 0.0), convention="world"),
+        data_types=["rgb"],
+        spawn=sim_utils.PinholeCameraCfg(
+            focal_length=24.0, focus_distance=400.0, horizontal_aperture=20.955, clipping_range=(0.1, 20.0)
+        ),
+        width=100,
+        height=100,
+    )
+
+    observation_space = spaces.Dict({
+        "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        "camera": spaces.Box(low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)),
+    })  # or for simplicity: {"joint-velocities": 2, "camera": [height, width, 3]}
+    action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]

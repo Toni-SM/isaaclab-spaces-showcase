@@ -90,10 +90,10 @@ class CartpoleCameraEnv(DirectRLEnv):
         # composite spaces
         # - Tuple
         elif isinstance(self.single_observation_space["policy"], gym.spaces.Tuple):
-            obs = (self.joint_pos, self.joint_vel, camera_data)
+            obs = (self.joint_vel, camera_data)
         # - Dict
         elif isinstance(self.single_observation_space["policy"], gym.spaces.Dict):
-            obs = {"joint-positions": self.joint_pos, "joint-velocities": self.joint_vel, "camera": camera_data}
+            obs = {"joint-velocities": self.joint_vel, "camera": camera_data}
 
         observations = {"policy": obs}
         return observations
