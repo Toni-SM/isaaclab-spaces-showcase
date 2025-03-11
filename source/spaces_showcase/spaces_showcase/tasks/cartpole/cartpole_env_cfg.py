@@ -44,9 +44,9 @@ class CartpoleBaseEnvCfg(DirectRLEnvCfg):
     rew_scale_pole_vel = -0.005
 
 
-"""
-Observation space as Box
-"""
+###
+# Observation space as Box
+###
 
 
 @configclass
@@ -141,9 +141,9 @@ class BoxMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
 
 
-"""
-Observation space as Discrete
-"""
+###
+# Observation space as Discrete
+###
 
 
 @configclass
@@ -274,9 +274,9 @@ class DiscreteMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
 
 
-"""
-Observation space as Dict
-"""
+###
+# Observation space as Dict
+###
 
 
 @configclass
@@ -374,9 +374,9 @@ class DictMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
 
 
-"""
-Observation space as Tuple
-"""
+###
+# Observation space as Tuple
+###
 
 
 @configclass

@@ -11,9 +11,13 @@ import gymnasium as gym
 
 from . import agents
 
-##
-# Register Gym environments.
-##
+###########################
+# Register Gym environments
+###########################
+
+###
+# Observation space as Box
+###
 
 gym.register(
     id="Spaces-Showcase-Box-Box-Cartpole-Direct-v0",
@@ -45,6 +49,10 @@ gym.register(
     },
 )
 
+###
+# Observation space as Discrete
+###
+
 gym.register(
     id="Spaces-Showcase-Discrete-Box-Cartpole-Direct-v0",
     entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
@@ -54,6 +62,30 @@ gym.register(
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_discrete_box_ppo_cfg.yaml",
     },
 )
+
+gym.register(
+    id="Spaces-Showcase-Discrete-Discrete-Cartpole-Direct-v0",
+    entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.cartpole_env_cfg:DiscreteDiscreteEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_discrete_discrete_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
+    id="Spaces-Showcase-Discrete-MultiDiscrete-Cartpole-Direct-v0",
+    entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.cartpole_env_cfg:DiscreteMultiDiscreteEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_discrete_multidiscrete_ppo_cfg.yaml",
+    },
+)
+
+###
+# Observation space as Dict
+###
 
 gym.register(
     id="Spaces-Showcase-Dict-Box-Cartpole-Direct-v0",
@@ -84,6 +116,10 @@ gym.register(
         "skrl_cfg_entry_point": f"{agents.__name__}:skrl_dict_multidiscrete_ppo_cfg.yaml",
     },
 )
+
+###
+# Observation space as Tuple
+###
 
 gym.register(
     id="Spaces-Showcase-Tuple-Box-Cartpole-Direct-v0",
