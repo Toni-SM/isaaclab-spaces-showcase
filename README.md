@@ -116,8 +116,8 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
   <tr>
     <td><strong>Dict</strong></td>
     <td>x</td>
-    <td><small>in progress</small></td>
-    <td><small>in progress</small></td>
+    <td>x</td>
+    <td>x</td>
   </tr>
   <tr>
     <td><strong>Tuple</strong></td>

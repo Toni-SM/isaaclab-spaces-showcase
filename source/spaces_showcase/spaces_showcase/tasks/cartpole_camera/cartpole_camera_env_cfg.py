@@ -203,3 +203,78 @@ class DictBoxEnvCfg(CartpoleCameraBaseEnvCfg):
         "camera": spaces.Box(low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)),
     })  # or for simplicity: {"joint-velocities": 2, "camera": [height, width, 3]}
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
+class DictDiscreteEnvCfg(CartpoleCameraBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
+
+        ================  ===
+        Key               Observation
+        ================  ===
+        joint-velocities  DOF velocities
+        camera            RGB image
+        ================  ===
+
+    * Action space (``~gymnasium.spaces.Discrete`` with 3 elements)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Zero cart DOF effort
+        1    Negative maximum cart DOF effort
+        2    Positive maximum cart DOF effort
+        ===  ===
+    """
+
+    # camera
+    tiled_camera: TiledCameraCfg = get_tiled_camera_cfg("rgb")
+
+    # spaces
+    observation_space = spaces.Dict({
+        "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        "camera": spaces.Box(low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)),
+    })  # or for simplicity: {"joint-velocities": 2, "camera": [height, width, 3]}
+    action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
+
+@configclass
+class DictMultiDiscreteEnvCfg(CartpoleCameraBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Dict`` with 2 constituent spaces)
+
+        ================  ===
+        Key               Observation
+        ================  ===
+        joint-velocities  DOF velocities
+        camera            RGB image
+        ================  ===
+
+    * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
+
+        ===  ===
+        N    Action (Discrete 0)
+        ===  ===
+        0    Zero cart DOF effort
+        1    Half of maximum cart DOF effort
+        2    Maximum cart DOF effort
+        ===  ===
+
+        ===  ===
+        N    Action (Discrete 1)
+        ===  ===
+        0    Negative effort (one side)
+        1    Positive effort (other side)
+        ===  ===
+    """
+
+    # camera
+    tiled_camera: TiledCameraCfg = get_tiled_camera_cfg("rgb")
+
+    # spaces
+    observation_space = spaces.Dict({
+        "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
+        "camera": spaces.Box(low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)),
+    })  # or for simplicity: {"joint-velocities": 2, "camera": [height, width, 3]}
+    action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
