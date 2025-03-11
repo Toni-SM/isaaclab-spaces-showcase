@@ -98,8 +98,8 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
     <td rowspan="5"><p>observation space</td>
     <td><strong>Box</strong></td>
     <td>x</td>
-    <td><small>in progress</small></td>
-    <td><small>in progress</small></td>
+    <td>x</td>
+    <td>x</td>
   </tr>
   <tr>
     <td><strong>Discrete&nbsp;<sup>(1)</sup></strong></td>

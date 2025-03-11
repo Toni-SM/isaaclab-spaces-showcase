@@ -13,6 +13,19 @@ from isaaclab.sim import SimulationCfg
 from isaaclab.utils import configclass
 
 
+def get_tiled_camera_cfg(data_type: str, width: int = 100, height: int = 100) -> TiledCameraCfg:
+    return TiledCameraCfg(
+        prim_path="/World/envs/env_.*/Camera",
+        offset=TiledCameraCfg.OffsetCfg(pos=(-5.0, 0.0, 2.0), rot=(1.0, 0.0, 0.0, 0.0), convention="world"),
+        data_types=[data_type],
+        spawn=sim_utils.PinholeCameraCfg(
+            focal_length=24.0, focus_distance=400.0, horizontal_aperture=20.955, clipping_range=(0.1, 20.0)
+        ),
+        width=width,
+        height=height,
+    )
+
+
 @configclass
 class CartpoleCameraBaseEnvCfg(DirectRLEnvCfg):
     # env
@@ -49,6 +62,11 @@ class CartpoleCameraBaseEnvCfg(DirectRLEnvCfg):
     rew_scale_pole_vel = -0.005
 
 
+###
+# Observation space as Box
+###
+
+
 @configclass
 class BoxBoxEnvCfg(CartpoleCameraBaseEnvCfg):
     """
@@ -70,21 +88,89 @@ class BoxBoxEnvCfg(CartpoleCameraBaseEnvCfg):
     """
 
     # camera
-    tiled_camera: TiledCameraCfg = TiledCameraCfg(
-        prim_path="/World/envs/env_.*/Camera",
-        offset=TiledCameraCfg.OffsetCfg(pos=(-5.0, 0.0, 2.0), rot=(1.0, 0.0, 0.0, 0.0), convention="world"),
-        data_types=["rgb"],
-        spawn=sim_utils.PinholeCameraCfg(
-            focal_length=24.0, focus_distance=400.0, horizontal_aperture=20.955, clipping_range=(0.1, 20.0)
-        ),
-        width=100,
-        height=100,
-    )
+    tiled_camera: TiledCameraCfg = get_tiled_camera_cfg("rgb")
 
+    # spaces
     observation_space = spaces.Box(
         low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)
     )  # or for simplicity: [height, width, 3]
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
+class BoxDiscreteEnvCfg(CartpoleCameraBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Box`` with shape (height, width, 3))
+
+        ===  ===
+        Idx  Observation
+        ===  ===
+        -    RGB image
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Discrete`` with 3 elements)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Zero cart DOF effort
+        1    Negative maximum cart DOF effort
+        2    Positive maximum cart DOF effort
+        ===  ===
+    """
+
+    # camera
+    tiled_camera: TiledCameraCfg = get_tiled_camera_cfg("rgb")
+
+    # spaces
+    observation_space = spaces.Box(
+        low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)
+    )  # or for simplicity: [height, width, 3]
+    action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
+
+@configclass
+class BoxMultiDiscreteEnvCfg(CartpoleCameraBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Box`` with shape (height, width, 3))
+
+        ===  ===
+        Idx  Observation
+        ===  ===
+        -    RGB image
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
+
+        ===  ===
+        N    Action (Discrete 0)
+        ===  ===
+        0    Zero cart DOF effort
+        1    Half of maximum cart DOF effort
+        2    Maximum cart DOF effort
+        ===  ===
+
+        ===  ===
+        N    Action (Discrete 1)
+        ===  ===
+        0    Negative effort (one side)
+        1    Positive effort (other side)
+        ===  ===
+    """
+
+    # camera
+    tiled_camera: TiledCameraCfg = get_tiled_camera_cfg("rgb")
+
+    # spaces
+    observation_space = spaces.Box(
+        low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)
+    )  # or for simplicity: [height, width, 3]
+    action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
+
+
+###
+# Observation space as Dict
+###
 
 
 @configclass
@@ -109,17 +195,9 @@ class DictBoxEnvCfg(CartpoleCameraBaseEnvCfg):
     """
 
     # camera
-    tiled_camera: TiledCameraCfg = TiledCameraCfg(
-        prim_path="/World/envs/env_.*/Camera",
-        offset=TiledCameraCfg.OffsetCfg(pos=(-5.0, 0.0, 2.0), rot=(1.0, 0.0, 0.0, 0.0), convention="world"),
-        data_types=["rgb"],
-        spawn=sim_utils.PinholeCameraCfg(
-            focal_length=24.0, focus_distance=400.0, horizontal_aperture=20.955, clipping_range=(0.1, 20.0)
-        ),
-        width=100,
-        height=100,
-    )
+    tiled_camera: TiledCameraCfg = get_tiled_camera_cfg("rgb")
 
+    # spaces
     observation_space = spaces.Dict({
         "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
         "camera": spaces.Box(low=float("-inf"), high=float("inf"), shape=(tiled_camera.height, tiled_camera.width, 3)),

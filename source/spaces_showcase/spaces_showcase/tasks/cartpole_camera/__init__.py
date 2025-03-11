@@ -11,9 +11,13 @@ import gymnasium as gym
 
 from . import agents
 
-##
-# Register Gym environments.
-##
+###########################
+# Register Gym environments
+###########################
+
+###
+# Observation space as Box
+###
 
 gym.register(
     id="Spaces-Showcase-Box-Box-Cartpole-Camera-Direct-v0",
@@ -45,6 +49,9 @@ gym.register(
     },
 )
 
+###
+# Observation space as Dict
+###
 
 gym.register(
     id="Spaces-Showcase-Dict-Box-Cartpole-Camera-Direct-v0",

@@ -86,7 +86,6 @@ class CartpoleCameraEnv(DirectRLEnv):
         # - Box
         if isinstance(self.single_observation_space["policy"], gym.spaces.Box):
             obs = camera_data
-        # - Discrete
         # composite spaces
         # - Tuple
         elif isinstance(self.single_observation_space["policy"], gym.spaces.Tuple):
