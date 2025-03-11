@@ -44,6 +44,11 @@ class CartpoleBaseEnvCfg(DirectRLEnvCfg):
     rew_scale_pole_vel = -0.005
 
 
+"""
+Observation space as Box
+"""
+
+
 @configclass
 class BoxBoxEnvCfg(CartpoleBaseEnvCfg):
     """
@@ -136,13 +141,18 @@ class BoxMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
 
 
+"""
+Observation space as Discrete
+"""
+
+
 @configclass
 class DiscreteBoxEnvCfg(CartpoleBaseEnvCfg):
     """
     * Observation space (``~gymnasium.spaces.Discrete`` with 16 elements)
 
         ===  ===
-        N    Observation (DOF signs: pole position, cart position, pole velocity, cart velocity)
+        N    Observation (Value signs: pole position, cart position, pole velocity, cart velocity)
         ===  ===
         0    - - - -
         1    - - - +
@@ -173,6 +183,100 @@ class DiscreteBoxEnvCfg(CartpoleBaseEnvCfg):
 
     observation_space = spaces.Discrete(16)  # or for simplicity: {16}
     action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
+class DiscreteDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Discrete`` with 16 elements)
+
+        ===  ===
+        N    Observation (Value signs: pole position, cart position, pole velocity, cart velocity)
+        ===  ===
+        0    - - - -
+        1    - - - +
+        2    - - + -
+        3    - - + +
+        4    - + - -
+        5    - + - +
+        6    - + + -
+        7    - + + +
+        8    + - - -
+        9    + - - +
+        10   + - + -
+        11   + - + +
+        12   + + - -
+        13   + + - +
+        14   + + + -
+        15   + + + +
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Discrete`` with 3 elements)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Zero cart DOF effort
+        1    Negative maximum cart DOF effort
+        2    Positive maximum cart DOF effort
+        ===  ===
+    """
+
+    observation_space = spaces.Discrete(16)  # or for simplicity: {16}
+    action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
+
+@configclass
+class DiscreteMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.Discrete`` with 16 elements)
+
+        ===  ===
+        N    Observation (Value signs: pole position, cart position, pole velocity, cart velocity)
+        ===  ===
+        0    - - - -
+        1    - - - +
+        2    - - + -
+        3    - - + +
+        4    - + - -
+        5    - + - +
+        6    - + + -
+        7    - + + +
+        8    + - - -
+        9    + - - +
+        10   + - + -
+        11   + - + +
+        12   + + - -
+        13   + + - +
+        14   + + + -
+        15   + + + +
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Zero cart DOF effort
+        1    Half of maximum cart DOF effort
+        2    Maximum cart DOF effort
+        ===  ===
+
+        ===  ===
+        M    Action
+        ===  ===
+        0    Negative effort (one side)
+        1    Positive effort (other side)
+        ===  ===
+    """
+
+    observation_space = spaces.Discrete(16)  # or for simplicity: {16}
+    action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
+
+
+"""
+Observation space as Dict
+"""
 
 
 @configclass
@@ -268,6 +372,11 @@ class DictMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
         "joint-velocities": spaces.Box(low=float("-inf"), high=float("inf"), shape=(2,)),
     })  # or for simplicity: {"joint-positions": 2, "joint-velocities": 2}
     action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
+
+
+"""
+Observation space as Tuple
+"""
 
 
 @configclass

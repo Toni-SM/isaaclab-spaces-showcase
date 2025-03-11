@@ -48,9 +48,9 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
   </tr>
   <tr>
     <td><strong>Discrete&nbsp;<sup>(1)</sup></strong></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>x</td>
+    <td>x</td>
+    <td>x</td>
     <td></td>
     <td></td>
   </tr>
@@ -148,6 +148,6 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
 
 Notes: The following features are currently supported only on the skrl's [develop](https://github.com/Toni-SM/skrl/tree/develop) branch:
 
-<sup>(1)</sup> `Discrete` and `MultiDiscrete` observation spaces.
+<sup>(1)</sup> One-hot encoding of `Discrete` and `MultiDiscrete` observation spaces.
 
-<sup>(2)</sup> `MultiDiscrete` action space.
+<sup>(2)</sup> `MultiDiscrete` action space (`MultiCategoricalMixin` model instantiator).
