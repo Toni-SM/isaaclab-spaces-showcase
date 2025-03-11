@@ -84,6 +84,40 @@ gym.register(
 )
 
 ###
+# Observation space as MultiDiscrete
+###
+
+gym.register(
+    id="Spaces-Showcase-MultiDiscrete-Box-Cartpole-Direct-v0",
+    entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.cartpole_env_cfg:MultiDiscreteBoxEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_multidiscrete_box_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
+    id="Spaces-Showcase-MultiDiscrete-Discrete-Cartpole-Direct-v0",
+    entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.cartpole_env_cfg:MultiDiscreteDiscreteEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_multidiscrete_discrete_ppo_cfg.yaml",
+    },
+)
+
+gym.register(
+    id="Spaces-Showcase-MultiDiscrete-MultiDiscrete-Cartpole-Direct-v0",
+    entry_point=f"{__name__}.cartpole_env:CartpoleEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.cartpole_env_cfg:MultiDiscreteMultiDiscreteEnvCfg",
+        "skrl_cfg_entry_point": f"{agents.__name__}:skrl_multidiscrete_multidiscrete_ppo_cfg.yaml",
+    },
+)
+
+###
 # Observation space as Dict
 ###
 

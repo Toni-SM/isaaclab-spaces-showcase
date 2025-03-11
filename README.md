@@ -56,9 +56,9 @@ python scripts/skrl/train.py --task Spaces-Showcase-<OBSERVATION>-<ACTION>-Cartp
   </tr>
   <tr>
     <td><strong>MultiDiscrete&nbsp;<sup>(1)</sup></strong></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>x</td>
+    <td>x</td>
+    <td>x</td>
     <td></td>
     <td></td>
   </tr>

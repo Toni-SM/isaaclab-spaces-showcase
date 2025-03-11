@@ -66,6 +66,9 @@ class CartpoleEnv(DirectRLEnv):
         self.cartpole.set_joint_effort_target(target, joint_ids=self._cart_dof_idx)
 
     def _get_observations(self) -> dict:
+        def discretization_indices(x: torch.Tensor, condition: torch.Tensor) -> torch.Tensor:
+            return torch.prod(x == torch.tensor(condition, device=self.device), axis=-1).to(torch.bool)
+
         # fundamental spaces
         # - Box
         if isinstance(self.single_observation_space["policy"], gym.spaces.Box):
@@ -92,26 +95,51 @@ class CartpoleEnv(DirectRLEnv):
                 )
                 >= 0
             )
-            condition = lambda x: torch.prod(data == torch.tensor(x, device=self.device), axis=-1).to(  # noqa: E731
-                torch.bool
-            )
 
-            obs = torch.zeros((self.num_envs), dtype=torch.int32, device=self.device)
-            obs = torch.where(condition([False, False, False, True]), 1, obs)
-            obs = torch.where(condition([False, False, True, False]), 2, obs)
-            obs = torch.where(condition([False, False, True, True]), 3, obs)
-            obs = torch.where(condition([False, True, False, False]), 4, obs)
-            obs = torch.where(condition([False, True, False, True]), 5, obs)
-            obs = torch.where(condition([False, True, True, False]), 6, obs)
-            obs = torch.where(condition([False, True, True, True]), 7, obs)
-            obs = torch.where(condition([True, False, False, False]), 8, obs)
-            obs = torch.where(condition([True, False, False, True]), 9, obs)
-            obs = torch.where(condition([True, False, True, False]), 10, obs)
-            obs = torch.where(condition([True, False, True, True]), 11, obs)
-            obs = torch.where(condition([True, True, False, False]), 12, obs)
-            obs = torch.where(condition([True, True, False, True]), 13, obs)
-            obs = torch.where(condition([True, True, True, False]), 14, obs)
-            obs = torch.where(condition([True, True, True, True]), 15, obs)
+            obs = torch.zeros((self.num_envs,), dtype=torch.int32, device=self.device)
+            obs = torch.where(discretization_indices(data, [False, False, False, True]), 1, obs)
+            obs = torch.where(discretization_indices(data, [False, False, True, False]), 2, obs)
+            obs = torch.where(discretization_indices(data, [False, False, True, True]), 3, obs)
+            obs = torch.where(discretization_indices(data, [False, True, False, False]), 4, obs)
+            obs = torch.where(discretization_indices(data, [False, True, False, True]), 5, obs)
+            obs = torch.where(discretization_indices(data, [False, True, True, False]), 6, obs)
+            obs = torch.where(discretization_indices(data, [False, True, True, True]), 7, obs)
+            obs = torch.where(discretization_indices(data, [True, False, False, False]), 8, obs)
+            obs = torch.where(discretization_indices(data, [True, False, False, True]), 9, obs)
+            obs = torch.where(discretization_indices(data, [True, False, True, False]), 10, obs)
+            obs = torch.where(discretization_indices(data, [True, False, True, True]), 11, obs)
+            obs = torch.where(discretization_indices(data, [True, True, False, False]), 12, obs)
+            obs = torch.where(discretization_indices(data, [True, True, False, True]), 13, obs)
+            obs = torch.where(discretization_indices(data, [True, True, True, False]), 14, obs)
+            obs = torch.where(discretization_indices(data, [True, True, True, True]), 15, obs)
+        # - MultiDiscrete
+        elif isinstance(self.single_observation_space["policy"], gym.spaces.MultiDiscrete):
+            zeros = torch.zeros((self.num_envs,), dtype=torch.int32, device=self.device)
+            obs = torch.cat(
+                (
+                    torch.where(
+                        discretization_indices(self.joint_pos[:, self._pole_dof_idx[0]].unsqueeze(dim=1) >= 0, [True]),
+                        1,
+                        zeros,
+                    ).unsqueeze(dim=1),
+                    torch.where(
+                        discretization_indices(self.joint_pos[:, self._cart_dof_idx[0]].unsqueeze(dim=1) >= 0, [True]),
+                        1,
+                        zeros,
+                    ).unsqueeze(dim=1),
+                    torch.where(
+                        discretization_indices(self.joint_vel[:, self._pole_dof_idx[0]].unsqueeze(dim=1) >= 0, [True]),
+                        1,
+                        zeros,
+                    ).unsqueeze(dim=1),
+                    torch.where(
+                        discretization_indices(self.joint_vel[:, self._cart_dof_idx[0]].unsqueeze(dim=1) >= 0, [True]),
+                        1,
+                        zeros,
+                    ).unsqueeze(dim=1),
+                ),
+                dim=-1,
+            )
         # composite spaces
         # - Tuple
         elif isinstance(self.single_observation_space["policy"], gym.spaces.Tuple):

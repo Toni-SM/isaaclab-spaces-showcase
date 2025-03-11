@@ -122,7 +122,7 @@ class BoxMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
 
         ===  ===
-        N    Action
+        N    Action (Discrete 0)
         ===  ===
         0    Zero cart DOF effort
         1    Half of maximum cart DOF effort
@@ -130,7 +130,7 @@ class BoxMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
 
         ===  ===
-        M    Action
+        N    Action (Discrete 1)
         ===  ===
         0    Negative effort (one side)
         1    Positive effort (other side)
@@ -255,7 +255,7 @@ class DiscreteMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
 
         ===  ===
-        N    Action
+        N    Action (Discrete 0)
         ===  ===
         0    Zero cart DOF effort
         1    Half of maximum cart DOF effort
@@ -263,7 +263,7 @@ class DiscreteMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
 
         ===  ===
-        M    Action
+        N    Action (Discrete 1)
         ===  ===
         0    Negative effort (one side)
         1    Positive effort (other side)
@@ -271,6 +271,160 @@ class DiscreteMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     """
 
     observation_space = spaces.Discrete(16)  # or for simplicity: {16}
+    action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
+
+
+###
+# Observation space as MultiDiscrete
+###
+
+
+@configclass
+class MultiDiscreteBoxEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.MultiDiscrete`` with 4 discrete spaces)
+
+        ===  ===
+        N    Observation (Discrete 0)
+        ===  ===
+        0    Negative pole position (-)
+        1    Zero or positive pole position (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 1)
+        ===  ===
+        0    Negative cart position (-)
+        1    Zero or positive cart position (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 2)
+        ===  ===
+        0    Negative pole velocity (-)
+        1    Zero or positive pole velocity (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 3)
+        ===  ===
+        0    Negative cart velocity (-)
+        1    Zero or positive cart velocity (+)
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Box`` with shape (1,))
+
+        ===  ===
+        Idx  Action
+        ===  ===
+        0    Cart DOF effort scale: [-1, 1]
+        ===  ===
+    """
+
+    observation_space = spaces.MultiDiscrete([2, 2, 2, 2])  # or for simplicity: [{2}, {2}, {2}, {2}]
+    action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))  # or for simplicity: 1 or [1]
+
+
+@configclass
+class MultiDiscreteDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.MultiDiscrete`` with 4 discrete spaces)
+
+        ===  ===
+        N    Observation (Discrete 0)
+        ===  ===
+        0    Negative pole position (-)
+        1    Zero or positive pole position (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 1)
+        ===  ===
+        0    Negative cart position (-)
+        1    Zero or positive cart position (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 2)
+        ===  ===
+        0    Negative pole velocity (-)
+        1    Zero or positive pole velocity (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 3)
+        ===  ===
+        0    Negative cart velocity (-)
+        1    Zero or positive cart velocity (+)
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.Discrete`` with 3 elements)
+
+        ===  ===
+        N    Action
+        ===  ===
+        0    Zero cart DOF effort
+        1    Negative maximum cart DOF effort
+        2    Positive maximum cart DOF effort
+        ===  ===
+    """
+
+    observation_space = spaces.MultiDiscrete([2, 2, 2, 2])  # or for simplicity: [{2}, {2}, {2}, {2}]
+    action_space = spaces.Discrete(3)  # or for simplicity: {3}
+
+
+@configclass
+class MultiDiscreteMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
+    """
+    * Observation space (``~gymnasium.spaces.MultiDiscrete`` with 4 discrete spaces)
+
+        ===  ===
+        N    Observation (Discrete 0)
+        ===  ===
+        0    Negative pole position (-)
+        1    Zero or positive pole position (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 1)
+        ===  ===
+        0    Negative cart position (-)
+        1    Zero or positive cart position (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 2)
+        ===  ===
+        0    Negative pole velocity (-)
+        1    Zero or positive pole velocity (+)
+        ===  ===
+
+        ===  ===
+        N    Observation (Discrete 3)
+        ===  ===
+        0    Negative cart velocity (-)
+        1    Zero or positive cart velocity (+)
+        ===  ===
+
+    * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
+
+        ===  ===
+        N    Action (Discrete 0)
+        ===  ===
+        0    Zero cart DOF effort
+        1    Half of maximum cart DOF effort
+        2    Maximum cart DOF effort
+        ===  ===
+
+        ===  ===
+        N    Action (Discrete 1)
+        ===  ===
+        0    Negative effort (one side)
+        1    Positive effort (other side)
+        ===  ===
+    """
+
+    observation_space = spaces.MultiDiscrete([2, 2, 2, 2])  # or for simplicity: [{2}, {2}, {2}, {2}]
     action_space = spaces.MultiDiscrete([3, 2])  # or for simplicity: [{3}, {2}]
 
 
@@ -352,7 +506,7 @@ class DictMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
 
         ===  ===
-        N    Action
+        N    Action (Discrete 0)
         ===  ===
         0    Zero cart DOF effort
         1    Half of maximum cart DOF effort
@@ -360,7 +514,7 @@ class DictMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
 
         ===  ===
-        M    Action
+        N    Action (Discrete 1)
         ===  ===
         0    Negative effort (one side)
         1    Positive effort (other side)
@@ -452,7 +606,7 @@ class TupleMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
     * Action space (``~gymnasium.spaces.MultiDiscrete`` with 2 discrete spaces)
 
         ===  ===
-        N    Action
+        N    Action (Discrete 0)
         ===  ===
         0    Zero cart DOF effort
         1    Half of maximum cart DOF effort
@@ -460,7 +614,7 @@ class TupleMultiDiscreteEnvCfg(CartpoleBaseEnvCfg):
         ===  ===
 
         ===  ===
-        M    Action
+        N    Action (Discrete 1)
         ===  ===
         0    Negative effort (one side)
         1    Positive effort (other side)
